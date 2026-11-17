@@ -99,7 +99,7 @@ public class MainActivity extends Activity {
         root.addView(brand);
         TextView status=text("LIXXYZ-V1",11,0xffb8aeb2,true); status.setGravity(Gravity.CENTER);
         LinearLayout.LayoutParams sp=new LinearLayout.LayoutParams(-1,-2); sp.bottomMargin=dp(16); root.addView(status,sp);
-        TextView section=text("FEATURE CONTROL",13,Color.WHITE,true); root.addView(section);
+        TextView section=text("Lixxzy Mods",13,Color.WHITE,true); root.addView(section);
         addFeature(root,"DRAG HS","40%");
         addFeature(root,"HEADLOCK","30%");
         addFeature(root,"AIM PERFECT","10%");
@@ -111,7 +111,7 @@ public class MainActivity extends Activity {
         TextView max=button("FREE FIRE MAX");
         LinearLayout.LayoutParams mp=new LinearLayout.LayoutParams(-1,dp(54)); mp.topMargin=dp(10); root.addView(max,mp);
         max.setOnClickListener(v->launchGame("com.dts.freefiremax"));
-        TextView disclaimer=text("Switch hanya mengubah status tampilan panel; tidak mengubah aim atau mekanisme game.",10,0xff9d8f94,false);
+        TextView disclaimer=text("Lixxzy 2026©",10,0xff9d8f94,false);
         disclaimer.setGravity(Gravity.CENTER); disclaimer.setPadding(0,dp(20),0,dp(12)); root.addView(disclaimer);
         TextView logout=text("LOG OUT",12,RED,true); logout.setGravity(Gravity.CENTER); logout.setPadding(0,dp(12),0,dp(8));
         root.addView(logout); logout.setOnClickListener(v->showLogin());
