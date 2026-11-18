@@ -1,4 +1,4 @@
-package com.lanxx.ffpanel;
+package com.lixzzy.v1;
 
 import android.app.*;
 import android.app.usage.*;
@@ -52,7 +52,7 @@ public class FloatingService extends Service {
     }
     private void showBubble(){
         if(bubble!=null||!Settings.canDrawOverlays(this))return;
-        ImageView icon=new ImageView(this);icon.setImageResource(com.lanxx.ffpanel.R.mipmap.ic_launcher);icon.setScaleType(ImageView.ScaleType.CENTER_CROP);icon.setBackground(bg(Color.BLACK,0xffff304d));icon.setPadding(dp(2),dp(2),dp(2),dp(2));
+        ImageView icon=new ImageView(this);icon.setImageResource(com.lixzzy.v1.R.mipmap.ic_launcher);icon.setScaleType(ImageView.ScaleType.CENTER_CROP);icon.setBackground(bg(Color.BLACK,0xffff304d));icon.setPadding(dp(2),dp(2),dp(2),dp(2));
         bubble=icon;bubbleParams=params(dp(58),dp(58),Gravity.TOP|Gravity.LEFT);bubbleParams.gravity=Gravity.TOP|Gravity.LEFT;bubbleParams.x=dp(12);bubbleParams.y=dp(180);
         icon.setOnClickListener(v->{if(expanded)hidePanel();else showPanel();});
         icon.setOnTouchListener(new View.OnTouchListener(){float sx,sy;int ox,oy;boolean moved;
