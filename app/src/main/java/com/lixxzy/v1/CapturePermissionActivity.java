@@ -1,4 +1,4 @@
-package com.lanxx.ffpanel;
+package com.lixxzy.v1;
 
 import android.app.Activity;
 import android.content.Context;
