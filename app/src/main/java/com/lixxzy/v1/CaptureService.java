@@ -20,7 +20,7 @@ public class CaptureService extends Service {
     public static final String ACTION_START = "com.lixxzy.v1.CAPTURE_START";
     public static final String ACTION_STOP = "com.lixxzy.v1.CAPTURE_STOP";
 
-    private static final String CHANNEL = "lixzzy_capture";
+    private static final String CHANNEL = "lixxzy_capture";
 
     private MediaProjection projection;
     private VirtualDisplay display;
@@ -37,7 +37,7 @@ public class CaptureService extends Service {
         if (Build.VERSION.SDK_INT >= 26) {
             NotificationChannel c = new NotificationChannel(
                 CHANNEL,
-                "Lixzzy Screen Capture",
+                "Lixxzy Screen Capture",
                 NotificationManager.IMPORTANCE_LOW
             );
 
@@ -78,7 +78,7 @@ public class CaptureService extends Service {
             : new Notification.Builder(this);
 
         return b.setSmallIcon(android.R.drawable.presence_video_online)
-            .setContentTitle("Lixzzy V1")
+            .setContentTitle("Lixxzy V1")
             .setContentText("Screen capture sedang berjalan")
             .setOngoing(true)
             .build();
@@ -134,7 +134,7 @@ public class CaptureService extends Service {
         );
 
         display = projection.createVirtualDisplay(
-            "LixzzyScreenshot",
+            "LixxzyScreenshot",
             w,
             h,
             density,
@@ -210,7 +210,7 @@ public class CaptureService extends Service {
 
             values.put(MediaStore.Images.Media.DISPLAY_NAME, name);
             values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
-            values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/Lixzzy");
+            values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/Lixxzy");
 
             android.net.Uri uri = getContentResolver().insert(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
@@ -241,7 +241,7 @@ public class CaptureService extends Service {
 
         Toast.makeText(
             this,
-            "Screenshot tersimpan di Pictures/Lixzzy.",
+            "Screenshot tersimpan di Pictures/Lixxzy.",
             Toast.LENGTH_LONG
         ).show();
     }
@@ -257,7 +257,7 @@ public class CaptureService extends Service {
 
         recordFile = new File(
             dir,
-            "Lixzzy_" + System.currentTimeMillis() + ".mp4"
+            "Lixxzy_" + System.currentTimeMillis() + ".mp4"
         );
 
         recorder = new MediaRecorder();
@@ -275,7 +275,7 @@ public class CaptureService extends Service {
         Surface surface = recorder.getSurface();
 
         display = projection.createVirtualDisplay(
-            "LixzzyRecord",
+            "LixxzyRecord",
             w,
             h,
             density,
