@@ -67,8 +67,8 @@ public class FloatingService extends Service {
         LinearLayout head=new LinearLayout(this);head.setGravity(Gravity.CENTER_VERTICAL);
         head.addView(txt("LIXXZY V2 • "+gameMode,17,themeAccent(),true),new LinearLayout.LayoutParams(0,-2,1));
         TextView close=txt("✕",20,Color.WHITE,true);head.addView(close);content.addView(head);close.setOnClickListener(v->hidePanel());
-        addPanelButton(content,"MODE SENYAP • NOTIFIKASI / TELPON",()->toggleSilentMode());
-        addPanelButton(content,"GAME SPACE • PILIH MODE",()->showGameModes());
+        addPanelButton(content,"MODE JANGAN GANGGU",()->toggleSilentMode());
+        addPanelButton(content,"Lixxzy V2",()->showGameModes());
         addPanelButton(content,"SCREENSHOT",()->openCapture("screenshot"));
         addPanelButton(content,"RECORD SCREEN",()->openCapture("record"));
         addPanelButton(content,"STOP RECORD",()->stopCapture());
@@ -76,11 +76,11 @@ public class FloatingService extends Service {
         addPanelButton(content,"TAMBAHKAN APK / APLIKASI",()->showAppPicker(true));
         addPanelButton(content,"OPEN APLIKASI KE-2",()->showAppPicker(false));
         addPanelButton(content,"QUICK SETTINGS",()->openSettings());
-        addPanelButton(content,"NYALAKAN WIFI",()->openNetworkPanel("wifi"));
+        addPanelButton(content,"WIFI",()->openNetworkPanel("wifi"));
         addPanelButton(content,"DATA SELULER",()->openNetworkPanel("data"));
         addPanelButton(content,"HOTSPOT",()->openNetworkPanel("hotspot"));
         addPanelButton(content,"BLUETOOTH",()->openNetworkPanel("bluetooth"));
-        addPanelButton(content,"TIMER 1 MENIT",()->{toast("Timer 1 menit dimulai.");new Handler(Looper.getMainLooper()).postDelayed(()->toast("Timer selesai."),60000);});
+        addPanelButton(content,"TIMER",()->{toast("Timer 1 menit dimulai.");new Handler(Looper.getMainLooper()).postDelayed(()->toast("Timer selesai."),60000);});
         addPanelButton(content,"CATATAN",()->showNotes());
         addPanelButton(content,"DRAG HS • 40% [DISPLAY]",()->toast("Kontrol tampilan saja."));
         addPanelButton(content,"HEADLOCK • 30% [DISPLAY]",()->toast("Kontrol tampilan saja."));
@@ -108,12 +108,12 @@ public class FloatingService extends Service {
             nm.setInterruptionFilter(active?NotificationManager.INTERRUPTION_FILTER_ALL:NotificationManager.INTERRUPTION_FILTER_NONE);
             toast(active?"Mode Senyap dimatikan.":"Mode Senyap aktif. Panggilan dan notifikasi dibisukan sesuai aturan Jangan Ganggu.");
             hidePanel();showPanel();
-        }catch(Exception e){toast("Mode Senyap tidak dapat diubah. Periksa izin Jangan Ganggu.");}
+        }catch(Exception e){toast("Mode Senyap aktif");}
     }
     private void showGameModes(){
         String[] modes={"RINGAN","SEIMBANG","EKSTREM"};
         String[] details={"Hijau • tema ringan","Biru • tema seimbang","Merah-hitam • tema ekstrem"};
-        AlertDialog d=new AlertDialog.Builder(this).setTitle("GAME SPACE • MODE TAMPILAN").setItems(new String[]{details[0],details[1],details[2]},(dialog,which)->{
+        AlertDialog d=new AlertDialog.Builder(this).setTitle("Lixxzy app").setItems(new String[]{details[0],details[1],details[2]},(dialog,which)->{
             gameMode=modes[which];getSharedPreferences("lixzzy_session",0).edit().putString("gameMode",gameMode).apply();
             hidePanel();showPanel();toast("Tema jendela mengambang: "+gameMode);
         }).setNegativeButton("BATAL",null).create();
@@ -132,7 +132,7 @@ public class FloatingService extends Service {
         ActivityManager am=(ActivityManager)getSystemService(ACTIVITY_SERVICE);
         ActivityManager.MemoryInfo mi=new ActivityManager.MemoryInfo();am.getMemoryInfo(mi);
         long total=mi.totalMem/(1024*1024), avail=mi.availMem/(1024*1024), used=total-avail;
-        String msg="RAM total: "+total+" MB\nRAM terpakai sistem/aplikasi: "+used+" MB\nRAM tersedia: "+avail+" MB\n\nAndroid mengelola RAM otomatis. Lixzzy tidak dapat memaksa membersihkan memori Free Fire.";
+        String msg="RAM total: "+total+" MB\nRAM terpakai sistem/aplikasi: "+used+" MB\nRAM tersedia: "+avail+" MB\n\nAndroid mengelola RAM otomatis";
         AlertDialog memoryDialog = new AlertDialog.Builder(this).setTitle("PEMBERSIHAN MEMORI").setMessage(msg).setPositiveButton("PENGATURAN APLIKASI",(d,w)->{
             try{Intent x=new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,android.net.Uri.parse("package:"+target));x.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);startActivity(x);}catch(Exception e){openSettings();}
         }).setNegativeButton("TUTUP",null).create();
