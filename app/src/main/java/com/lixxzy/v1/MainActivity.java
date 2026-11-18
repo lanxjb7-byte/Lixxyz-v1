@@ -1,4 +1,4 @@
-package com.lixxzy.v1;
+package com.lixxzy.v2;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -52,7 +52,7 @@ public class MainActivity extends Activity {
     }
     private void showLogin() {
         root = column(); root.setGravity(Gravity.CENTER);
-        TextView logo = text("Lixzzy",34,RED,true); logo.setGravity(Gravity.CENTER);
+        TextView logo = text("lixxzy",34,RED,true); logo.setGravity(Gravity.CENTER);
         root.addView(logo);
         TextView sub = text("LIXXY MODS  •  LIX",11,Color.LTGRAY,true);
         sub.setGravity(Gravity.CENTER); root.addView(sub);
@@ -95,7 +95,7 @@ public class MainActivity extends Activity {
     }
     private void showDashboard() {
         root=column();
-        TextView brand=text("Lixzzy V1",25,RED,true); brand.setGravity(Gravity.CENTER);
+        TextView brand=text("lixxzy V1",25,RED,true); brand.setGravity(Gravity.CENTER);
         root.addView(brand);
         TextView status=text("LIXXYZ-V1",11,0xffb8aeb2,true); status.setGravity(Gravity.CENTER);
         LinearLayout.LayoutParams sp=new LinearLayout.LayoutParams(-1,-2); sp.bottomMargin=dp(16); root.addView(status,sp);
@@ -117,4 +117,4 @@ public class MainActivity extends Activity {
         root.addView(logout); logout.setOnClickListener(v->showLogin());
         base(root);
     }
-                                      }
+ 
