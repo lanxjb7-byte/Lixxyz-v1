@@ -22,21 +22,20 @@ public class FloatingService extends Service {
     private View bubble,panel;
     private WindowManager.LayoutParams bubbleParams,panelParams;
     private String target="";
-    private boolean sawGame=false, expanded=false, stopped=false;
+    private boolean expanded=false, stopped=false;
     private String gameMode="SEIMBANG";
     private int themeAccent(){return "RINGAN".equals(gameMode)?0xff42e66b:("EKSTREM".equals(gameMode)?0xffff304d:0xff35a7ff);}
     private int themePanel(){return "RINGAN".equals(gameMode)?0xff071b10:("EKSTREM".equals(gameMode)?0xff16090d:0xff091522);}
     private int themeButton(){return "RINGAN".equals(gameMode)?0xff123a22:("EKSTREM".equals(gameMode)?0xff32101a:0xff12304a);}
-    private Runnable checker;
 
     @Override public void onCreate(){super.onCreate();wm=(WindowManager)getSystemService(WINDOW_SERVICE);gameMode=getSharedPreferences("lixzzy_session",0).getString("gameMode","SEIMBANG");createChannel();}
     @Override public int onStartCommand(Intent intent,int flags,int id){
         target=intent==null?"com.dts.freefireth":intent.getStringExtra("target");
         if(target==null)target="com.dts.freefireth";
         startForeground(41,notification());
-        checker=()->checkForeground();
-        handler.postDelayed(checker,1000);
-        return START_NOT_STICKY;
+        // Bubble dibuat segera dan tidak bergantung pada aplikasi/game yang sedang di depan.
+        showBubble();
+        return START_STICKY;
     }
     private void createChannel(){if(Build.VERSION.SDK_INT>=26){NotificationChannel c=new NotificationChannel(CHANNEL,"Lixzzy Floating Panel",NotificationManager.IMPORTANCE_LOW);((NotificationManager)getSystemService(NOTIFICATION_SERVICE)).createNotificationChannel(c);}}
     private Notification notification(){
@@ -87,7 +86,7 @@ public class FloatingService extends Service {
         addPanelButton(content,"HEADLOCK • 30% [DISPLAY]",()->toast("Kontrol tampilan saja."));
         addPanelButton(content,"AIM PERFECT • 10% [DISPLAY]",()->toast("Kontrol tampilan saja."));
         addPinnedApps(content);
-        TextView footer=txt("Keluar dari game = panel ditutup",10,0xffb7a8ad,false);footer.setPadding(0,dp(8),0,0);content.addView(footer);
+        TextView footer=txt("Panel tetap aktif saat berpindah aplikasi. Tutup lewat tombol X / STOP.",10,0xffb7a8ad,false);footer.setPadding(0,dp(8),0,0);content.addView(footer);
         scroll.addView(content);box.addView(scroll);
         panel=box;panelParams=params(dp(270),dp(440),Gravity.TOP|Gravity.LEFT);panelParams.gravity=Gravity.TOP|Gravity.LEFT;panelParams.x=dp(78);panelParams.y=dp(110);
         try{wm.addView(panel,panelParams);expanded=true;}catch(Exception e){panel=null;toast("Tidak bisa menampilkan panel di atas aplikasi ini.");}
@@ -118,9 +117,7 @@ public class FloatingService extends Service {
             gameMode=modes[which];getSharedPreferences("lixzzy_session",0).edit().putString("gameMode",gameMode).apply();
             hidePanel();showPanel();toast("Tema jendela mengambang: "+gameMode);
         }).setNegativeButton("BATAL",null).create();
-        if(Build.VERSION.SDK_INT>=26)d.getWindow();
-        d.getWindow().setType(Build.VERSION.SDK_INT>=26?WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY:WindowManager.LayoutParams.TYPE_PHONE);
-        d.show();
+        showOverlayDialog(d);
     }
 
     private void openCapture(String mode){
@@ -139,52 +136,41 @@ public class FloatingService extends Service {
         AlertDialog memoryDialog = new AlertDialog.Builder(this).setTitle("PEMBERSIHAN MEMORI").setMessage(msg).setPositiveButton("PENGATURAN APLIKASI",(d,w)->{
             try{Intent x=new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,android.net.Uri.parse("package:"+target));x.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);startActivity(x);}catch(Exception e){openSettings();}
         }).setNegativeButton("TUTUP",null).create();
-        if(Build.VERSION.SDK_INT>=26)memoryDialog.getWindow();
-        memoryDialog.getWindow().setType(Build.VERSION.SDK_INT>=26?WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY:WindowManager.LayoutParams.TYPE_PHONE);
-        memoryDialog.show();
+        showOverlayDialog(memoryDialog);
     }
-    private void openSettings(){try{Intent i=new Intent(Settings.ACTION_SETTINGS);i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);startActivity(i);}catch(Exception e){toast("Pengaturan tidak bisa dibuka.");}}
+    private void openSettings(){
+        AlertDialog d=new AlertDialog.Builder(this).setTitle("PENGATURAN ANDROID")
+            .setMessage("Pengaturan Android dibuka di luar panel. Panel LIXXZY tetap aktif di atas aplikasi lain.")
+            .setPositiveButton("BUKA PENGATURAN",(a,b)->{try{Intent i=new Intent(Settings.ACTION_SETTINGS);i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);startActivity(i);}catch(Exception e){toast("Pengaturan tidak bisa dibuka.");}})
+            .setNegativeButton("BATAL",null).create();
+        showOverlayDialog(d);
+    }
     private void openNetworkPanel(String kind){
-        try{
-            Intent intent;
-            if("wifi".equals(kind)){
-                if(Build.VERSION.SDK_INT>=29){
-                    intent=new Intent(Settings.Panel.ACTION_WIFI);
-                }else{
-                    intent=new Intent(Settings.ACTION_WIFI_SETTINGS);
-                }
-            }else if("data".equals(kind)){
-                if(Build.VERSION.SDK_INT>=29){
-                    intent=new Intent(Settings.Panel.ACTION_INTERNET_CONNECTIVITY);
-                }else{
-                    intent=new Intent(Settings.ACTION_DATA_ROAMING_SETTINGS);
-                }
-            }else if("hotspot".equals(kind)){
-                intent=new Intent("android.settings.TETHER_SETTINGS");
-                if(intent.resolveActivity(getPackageManager())==null)
-                    intent=new Intent(Settings.ACTION_WIRELESS_SETTINGS);
-            }else if("bluetooth".equals(kind)){
-                if(Build.VERSION.SDK_INT>=33){
-                    intent=new Intent(Settings.ACTION_BLUETOOTH_SETTINGS);
-                }else{
-                    intent=new Intent(android.bluetooth.BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                }
-            }else{
-                intent=new Intent(Settings.ACTION_SETTINGS);
-            }
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        }catch(Exception e){
-            try{
-                Intent fallback=new Intent(Settings.ACTION_SETTINGS);
-                fallback.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(fallback);
-            }catch(Exception ignored){
-                toast("Pengaturan jaringan tidak dapat dibuka di perangkat ini.");
-            }
+        String title, message;
+        if("wifi".equals(kind)){
+            title="WIFI"; message="Android 13 membatasi aplikasi biasa untuk menyalakan atau mematikan Wi-Fi secara langsung. Geser panel notifikasi dari atas lalu tekan ubin Wi-Fi. Panel LIXXZY akan tetap aktif.";
+        }else if("data".equals(kind)){
+            title="DATA SELULER"; message="Android membatasi aplikasi biasa mengubah data seluler secara langsung. Geser panel notifikasi dari atas lalu gunakan ubin Internet / Data seluler. Panel LIXXZY akan tetap aktif.";
+        }else if("hotspot".equals(kind)){
+            title="HOTSPOT"; message="Android membatasi aplikasi biasa menyalakan hotspot secara langsung. Geser panel notifikasi dari atas, tekan Hotspot, lalu aktifkan. Panel LIXXZY tidak dihentikan.";
+        }else{
+            title="BLUETOOTH"; message="Untuk keamanan, Android meminta konfirmasi sistem saat Bluetooth diaktifkan. Gunakan ubin Bluetooth pada panel cepat agar tidak berpindah ke halaman Pengaturan.";
         }
+        AlertDialog d=new AlertDialog.Builder(this).setTitle(title).setMessage(message)
+            .setPositiveButton("MENGERTI",null).create();
+        showOverlayDialog(d);
     }
-    private void showNotes(){EditText e=new EditText(this);e.setText(getSharedPreferences("lixzzy_notes",0).getString("note",""));AlertDialog dialog=new AlertDialog.Builder(this).setTitle("Catatan").setView(e).setPositiveButton("SIMPAN",(d,w)->getSharedPreferences("lixzzy_notes",0).edit().putString("note",e.getText().toString()).apply()).setNegativeButton("TUTUP",null).create();if(Build.VERSION.SDK_INT>=26)dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);dialog.show();}
+    private void showOverlayDialog(AlertDialog dialog){
+        try{
+            Window w=dialog.getWindow();
+            if(w!=null){
+                if(Build.VERSION.SDK_INT>=26)w.setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
+                else w.setType(WindowManager.LayoutParams.TYPE_PHONE);
+            }
+            dialog.show();
+        }catch(Exception e){toast("Dialog tidak dapat ditampilkan di atas aplikasi.");}
+    }
+    private void showNotes(){EditText e=new EditText(this);e.setText(getSharedPreferences("lixzzy_notes",0).getString("note",""));AlertDialog dialog=new AlertDialog.Builder(this).setTitle("Catatan").setView(e).setPositiveButton("SIMPAN",(d,w)->getSharedPreferences("lixzzy_notes",0).edit().putString("note",e.getText().toString()).apply()).setNegativeButton("TUTUP",null).create();showOverlayDialog(dialog);}
     private List<ResolveInfo> getLaunchableApps(){
         Intent query=new Intent(Intent.ACTION_MAIN);query.addCategory(Intent.CATEGORY_LAUNCHER);
         List<ResolveInfo> apps=getPackageManager().queryIntentActivities(query,0);
@@ -199,8 +185,7 @@ public class FloatingService extends Service {
             if(pin){Set<String> set=new HashSet<>(getSharedPreferences("lixzzy_pins",0).getStringSet("apps",new HashSet<>()));set.add(packages.get(which));getSharedPreferences("lixzzy_pins",0).edit().putStringSet("apps",set).apply();hidePanel();showPanel();toast("Shortcut ditambahkan ke panel.");}
             else try{startActivity(intents.get(which));}catch(Exception ex){toast("Aplikasi tidak bisa dibuka.");}
         }).setNegativeButton("BATAL",null).create();
-        if(Build.VERSION.SDK_INT>=26)picker.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
-        picker.show();
+        showOverlayDialog(picker);
     }
     private void addPinnedApps(LinearLayout content){
         Set<String> pins=getSharedPreferences("lixzzy_pins",0).getStringSet("apps",new HashSet<>());
@@ -216,16 +201,6 @@ public class FloatingService extends Service {
     }
     private void hidePanel(){if(panel!=null){try{wm.removeView(panel);}catch(Exception e){}panel=null;}expanded=false;}
     private void toast(String s){Toast.makeText(this,s,Toast.LENGTH_LONG).show();}
-    private void checkForeground(){
-        if(stopped)return;
-        String top=topPackage();
-        if(target.equals(top)){sawGame=true;if(bubble==null)showBubble();}
-        else if(sawGame){getSharedPreferences("lixzzy_session",0).edit().putBoolean("sessionEnded",true).apply();stopSelf();return;}
-        handler.postDelayed(checker,1200);
-    }
-    private String topPackage(){
-        try{UsageStatsManager us=(UsageStatsManager)getSystemService(USAGE_STATS_SERVICE);long now=System.currentTimeMillis();List<UsageStats> list=us.queryUsageStats(UsageStatsManager.INTERVAL_DAILY,now-15000,now);UsageStats latest=null;if(list!=null)for(UsageStats u:list)if(latest==null||u.getLastTimeUsed()>latest.getLastTimeUsed())latest=u;return latest==null?"":latest.getPackageName();}catch(Exception e){return "";}
-    }
     @Override public void onDestroy(){stopped=true;handler.removeCallbacksAndMessages(null);hidePanel();if(bubble!=null){try{wm.removeView(bubble);}catch(Exception e){}bubble=null;}super.onDestroy();}
     @Override public android.os.IBinder onBind(Intent i){return null;}
 }

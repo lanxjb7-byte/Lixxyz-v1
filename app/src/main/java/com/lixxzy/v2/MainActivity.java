@@ -30,7 +30,7 @@ public class MainActivity extends Activity {
     private void showLogin(){
         root=column();root.setGravity(Gravity.CENTER);
         TextView logo=text("Lixzzy",34,RED,true);logo.setGravity(Gravity.CENTER);root.addView(logo);
-        TextView sub=text("V1  •  FLOATING GAME TOOL",11,Color.LTGRAY,true);sub.setGravity(Gravity.CENTER);root.addView(sub);
+        TextView sub=text("V2  •  FLOATING GAME TOOL",11,Color.LTGRAY,true);sub.setGravity(Gravity.CENTER);root.addView(sub);
         Space gap=new Space(this);root.addView(gap,new LinearLayout.LayoutParams(1,dp(35)));
         LinearLayout card=new LinearLayout(this);card.setOrientation(1);card.setPadding(dp(18),dp(20),dp(18),dp(20));card.setBackground(shape(PANEL,0xff682131));
         card.addView(text("LOGIN ACCESS",18,Color.WHITE,true));
@@ -54,7 +54,6 @@ public class MainActivity extends Activity {
     }
     private void launchGame(String pkg){
         if(!Settings.canDrawOverlays(this)){new AlertDialog.Builder(this).setTitle("Izin floating window").setMessage("Izinkan Lixzzy tampil di atas aplikasi lain, lalu kembali dan tekan START lagi.").setPositiveButton("BUKA IZIN",(d,w)->startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,android.net.Uri.parse("package:"+getPackageName())))).setNegativeButton("BATAL",null).show();return;}
-        if(!usageAllowed()){new AlertDialog.Builder(this).setTitle("Izin deteksi game").setMessage("Aktifkan Usage Access untuk mendeteksi saat Free Fire ditutup. Setelah memberi izin, kembali dan tekan START lagi.").setPositiveButton("BUKA PENGATURAN",(d,w)->startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))).setNegativeButton("BATAL",null).show();return;}
         Intent launch=getPackageManager().getLaunchIntentForPackage(pkg);
         if(launch==null){Toast.makeText(this,"Game belum terpasang.",Toast.LENGTH_LONG).show();return;}
         Intent service=new Intent(this,FloatingService.class);service.putExtra("target",pkg);
@@ -67,7 +66,7 @@ public class MainActivity extends Activity {
         TextView section=text("FEATURE CONTROL • DISPLAY ONLY",13,Color.WHITE,true);LinearLayout.LayoutParams sec=new LinearLayout.LayoutParams(-1,-2);sec.topMargin=dp(18);root.addView(section,sec);
         addFeature(root,"DRAG HS","40%");addFeature(root,"HEADLOCK","30%");addFeature(root,"AIM PERFECT","10%");
         TextView permission=button("CHECK / ENABLE FLOATING PERMISSIONS");LinearLayout.LayoutParams pp=new LinearLayout.LayoutParams(-1,dp(50));pp.topMargin=dp(22);root.addView(permission,pp);
-        permission.setOnClickListener(v->{if(!Settings.canDrawOverlays(this))startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,android.net.Uri.parse("package:"+getPackageName())));else if(!usageAllowed())startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));else Toast.makeText(this,"Izin sudah aktif.",Toast.LENGTH_SHORT).show();});
+        permission.setOnClickListener(v->{if(!Settings.canDrawOverlays(this))startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,android.net.Uri.parse("package:"+getPackageName())));else Toast.makeText(this,"Izin floating window sudah aktif.",Toast.LENGTH_SHORT).show();});
         TextView ff=button("🔥  START FREE FIRE");LinearLayout.LayoutParams fp=new LinearLayout.LayoutParams(-1,dp(54));fp.topMargin=dp(12);root.addView(ff,fp);ff.setOnClickListener(v->launchGame("com.dts.freefireth"));
         TextView max=button("🔥  START FREE FIRE MAX");LinearLayout.LayoutParams mp=new LinearLayout.LayoutParams(-1,dp(54));mp.topMargin=dp(10);root.addView(max,mp);max.setOnClickListener(v->launchGame("com.dts.freefiremax"));
         TextView desc=text("Floating panel hanya berisi utilitas dan shortcut. Switch fitur tidak mengubah aim/gameplay.",10,0xff9d8f94,false);desc.setGravity(Gravity.CENTER);desc.setPadding(0,dp(18),0,dp(10));root.addView(desc);
