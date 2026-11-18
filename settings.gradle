@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Lixzzy-V1"
+rootProject.name = "Lixxzy-V2"
 include ':app'
