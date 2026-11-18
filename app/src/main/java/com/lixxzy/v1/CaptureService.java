@@ -1,5 +1,5 @@
 
-package com.lixxzy.v1;
+package com.lixxzy.v2;
 
 import android.app.*;
 import android.content.*;
@@ -17,8 +17,8 @@ import java.util.*;
 
 public class CaptureService extends Service {
 
-    public static final String ACTION_START = "com.lixxzy.v1.CAPTURE_START";
-    public static final String ACTION_STOP = "com.lixxzy.v1.CAPTURE_STOP";
+    public static final String ACTION_START = "com.lixxzy.v2.CAPTURE_START";
+    public static final String ACTION_STOP = "com.lixxzy.v2.CAPTURE_STOP";
 
     private static final String CHANNEL = "lixxzy_capture";
 
@@ -198,7 +198,7 @@ public class CaptureService extends Service {
 
     private void saveBitmap(Bitmap bitmap) throws Exception {
 
-        String name = "Lixzzy_" +
+        String name = "lixxzy_" +
             new SimpleDateFormat(
                 "yyyyMMdd_HHmmss",
                 Locale.US
@@ -250,7 +250,7 @@ public class CaptureService extends Service {
 
         File dir = new File(
             getExternalFilesDir(Environment.DIRECTORY_MOVIES),
-            "Lixzzy"
+            "lixxzy"
         );
 
         dir.mkdirs();
