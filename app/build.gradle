@@ -2,10 +2,10 @@ plugins {
     id 'com.android.application'
 }
 android {
-    namespace 'com.lixxzy.v1'
+    namespace 'com.lixxzy.v2'
     compileSdk 35
     defaultConfig {
-        applicationId 'com.lixxzy.v1'
+        applicationId 'com.lixxzy.v2'
         minSdk 23
         targetSdk 35
         versionCode 1
