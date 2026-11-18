@@ -1,4 +1,4 @@
-name: Build Lixzzy V1 APK
+name: Build Lixxzy V2 APK
 
 on:
   workflow_dispatch:
@@ -45,7 +45,7 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Lixzzy-V1-APK
+          name: Lixxzy-V2-APK
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           
