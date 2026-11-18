@@ -1,4 +1,4 @@
-Lixzzy V1 - Floating Panel Plus
+Lixxy V1 - Floating Panel Plus
 ================================
 
 Additional floating panel tools:
