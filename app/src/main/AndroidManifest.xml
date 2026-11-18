@@ -14,7 +14,7 @@
     </queries>
     <application
         android:theme="@style/AppTheme"
-        android:label="Lixzzy V1"
+        android:label="Lixxzy V2"
         android:icon="@mipmap/ic_launcher"
         android:allowBackup="false"
         android:supportsRtl="true">
