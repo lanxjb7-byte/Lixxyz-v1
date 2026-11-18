@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
         TextView error=text("",12,0xffff6b7e,false);card.addView(error);
         login.setOnClickListener(v->{if(ACCESS_KEY.equals(key.getText().toString().trim())){getSharedPreferences(PREF,0).edit().putBoolean("sessionEnded",false).apply();showDashboard();}else error.setText("Access key salah.");});
         root.addView(card,new LinearLayout.LayoutParams(-1,-2));
-        TextView note=text("Akses lokal demo • key tertanam di APK",10,0xff887b80,false);note.setGravity(Gravity.CENTER);root.addView(note);base(root);
+        TextView note=text("Verifikasi keys 👆",10,0xff887b80,false);note.setGravity(Gravity.CENTER);root.addView(note);base(root);
     }
     private void addFeature(LinearLayout parent,String name,String percent){
         LinearLayout row=new LinearLayout(this);row.setGravity(Gravity.CENTER_VERTICAL);row.setPadding(dp(14),dp(12),dp(12),dp(12));row.setBackground(shape(PANEL,0xff4d202c));
@@ -62,14 +62,14 @@ public class MainActivity extends Activity {
     }
     private void showDashboard(){
         root=column();TextView brand=text("LIXXZY V2",25,RED,true);brand.setGravity(Gravity.CENTER);root.addView(brand);
-        TextView status=text("ACCESS GRANTED • FLOATING PANEL",11,0xffb8aeb2,true);status.setGravity(Gravity.CENTER);root.addView(status);
-        TextView section=text("FEATURE CONTROL • DISPLAY ONLY",13,Color.WHITE,true);LinearLayout.LayoutParams sec=new LinearLayout.LayoutParams(-1,-2);sec.topMargin=dp(18);root.addView(section,sec);
+        TextView status=text("LanxX Dev",11,0xffb8aeb2,true);status.setGravity(Gravity.CENTER);root.addView(status);
+        TextView section=text("Lixxzy v2",13,Color.WHITE,true);LinearLayout.LayoutParams sec=new LinearLayout.LayoutParams(-1,-2);sec.topMargin=dp(18);root.addView(section,sec);
         addFeature(root,"DRAG HS","40%");addFeature(root,"HEADLOCK","30%");addFeature(root,"AIM PERFECT","10%");
         TextView permission=button("CHECK / ENABLE FLOATING PERMISSIONS");LinearLayout.LayoutParams pp=new LinearLayout.LayoutParams(-1,dp(50));pp.topMargin=dp(22);root.addView(permission,pp);
         permission.setOnClickListener(v->{if(!Settings.canDrawOverlays(this))startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,android.net.Uri.parse("package:"+getPackageName())));else Toast.makeText(this,"Izin floating window sudah aktif.",Toast.LENGTH_SHORT).show();});
-        TextView ff=button("🔥  START FREE FIRE");LinearLayout.LayoutParams fp=new LinearLayout.LayoutParams(-1,dp(54));fp.topMargin=dp(12);root.addView(ff,fp);ff.setOnClickListener(v->launchGame("com.dts.freefireth"));
-        TextView max=button("🔥  START FREE FIRE MAX");LinearLayout.LayoutParams mp=new LinearLayout.LayoutParams(-1,dp(54));mp.topMargin=dp(10);root.addView(max,mp);max.setOnClickListener(v->launchGame("com.dts.freefiremax"));
-        TextView desc=text("Floating panel hanya berisi utilitas dan shortcut. Switch fitur tidak mengubah aim/gameplay.",10,0xff9d8f94,false);desc.setGravity(Gravity.CENTER);desc.setPadding(0,dp(18),0,dp(10));root.addView(desc);
+        TextView ff=button("com.dts.freefireth");LinearLayout.LayoutParams fp=new LinearLayout.LayoutParams(-1,dp(54));fp.topMargin=dp(12);root.addView(ff,fp);ff.setOnClickListener(v->launchGame("com.dts.freefireth"));
+        TextView max=button("com.dts.freefiremax");LinearLayout.LayoutParams mp=new LinearLayout.LayoutParams(-1,dp(54));mp.topMargin=dp(10);root.addView(max,mp);max.setOnClickListener(v->launchGame("com.dts.freefiremax"));
+        TextView desc=text("Lixxzy apps",10,0xff9d8f94,false);desc.setGravity(Gravity.CENTER);desc.setPadding(0,dp(18),0,dp(10));root.addView(desc);
         TextView logout=text("LOG OUT",12,RED,true);logout.setGravity(Gravity.CENTER);logout.setPadding(0,dp(12),0,dp(8));root.addView(logout);logout.setOnClickListener(v->{stopService(new Intent(this,FloatingService.class));showLogin();});
         base(root);
     }
