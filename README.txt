@@ -1,9 +1,9 @@
-Lixxy V1 - Floating Panel Plus
+LIXXZY V2 - Floating Panel Plus
 ================================
 
 Additional floating panel tools:
 - SCREENSHOT: uses Android MediaProjection consent; saves PNG to Pictures/Lixzzy.
-- RECORD SCREEN: uses Android MediaProjection consent; saves MP4 under Android/data/com.lanxx.ffpanel/files/Movies/Lixzzy. Press STOP RECORD to finish.
+- RECORD SCREEN: uses Android MediaProjection consent; saves MP4 under Android/data/com.lixxzy.v2/files/Movies/Lixzzy. Press STOP RECORD to finish.
 - PEMBERSIHAN MEMORI: shows RAM statistics and opens app settings. Android does not let ordinary apps forcibly clear another app's RAM.
 - TAMBAHKAN APK / APLIKASI: adds a shortcut to an installed app in the floating panel. It does not install APK files.
 - Existing OPEN APLIKASI KE-2 and other utility items remain.
