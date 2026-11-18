@@ -1,4 +1,4 @@
-package com.lixzzy.v1;
+package com.lixxzy.v2;
 
 import android.app.*;
 import android.app.usage.*;
@@ -16,7 +16,7 @@ import android.widget.*;
 import java.util.*;
 
 public class FloatingService extends Service {
-    private static final String CHANNEL="lixzzy_float";
+    private static final String CHANNEL="lixxzy_float";
     private final Handler handler=new Handler(Looper.getMainLooper());
     private WindowManager wm;
     private View bubble,panel;
@@ -29,7 +29,7 @@ public class FloatingService extends Service {
     private int themeButton(){return "RINGAN".equals(gameMode)?0xff123a22:("EKSTREM".equals(gameMode)?0xff32101a:0xff12304a);}
     private Runnable checker;
 
-    @Override public void onCreate(){super.onCreate();wm=(WindowManager)getSystemService(WINDOW_SERVICE);gameMode=getSharedPreferences("lixzzy_session",0).getString("gameMode","SEIMBANG");createChannel();}
+    @Override public void onCreate(){super.onCreate();wm=(WindowManager)getSystemService(WINDOW_SERVICE);gameMode=getSharedPreferences("lixxzy_session",0).getString("gameMode","SEIMBANG");createChannel();}
     @Override public int onStartCommand(Intent intent,int flags,int id){
         target=intent==null?"com.dts.freefireth":intent.getStringExtra("target");
         if(target==null)target="com.dts.freefireth";
@@ -38,10 +38,10 @@ public class FloatingService extends Service {
         handler.postDelayed(checker,1000);
         return START_NOT_STICKY;
     }
-    private void createChannel(){if(Build.VERSION.SDK_INT>=26){NotificationChannel c=new NotificationChannel(CHANNEL,"Lixzzy Floating Panel",NotificationManager.IMPORTANCE_LOW);((NotificationManager)getSystemService(NOTIFICATION_SERVICE)).createNotificationChannel(c);}}
+    private void createChannel(){if(Build.VERSION.SDK_INT>=26){NotificationChannel c=new NotificationChannel(CHANNEL,"lixxzy Floating Panel",NotificationManager.IMPORTANCE_LOW);((NotificationManager)getSystemService(NOTIFICATION_SERVICE)).createNotificationChannel(c);}}
     private Notification notification(){
         Notification.Builder b=Build.VERSION.SDK_INT>=26?new Notification.Builder(this,CHANNEL):new Notification.Builder(this);
-        return b.setSmallIcon(android.R.drawable.ic_menu_view).setContentTitle("Lixzzy V1 aktif").setContentText("Menunggu Free Fire / Free Fire MAX").setOngoing(true).build();
+        return b.setSmallIcon(android.R.drawable.ic_menu_view).setContentTitle("lixxzy v2 aktif").setContentText("Menunggu Free Fire / Free Fire MAX").setOngoing(true).build();
     }
     private int dp(float v){return (int)(v*getResources().getDisplayMetrics().density+.5f);}
     private GradientDrawable bg(int color,int stroke){GradientDrawable d=new GradientDrawable();d.setColor(color);d.setCornerRadius(dp(16));if(stroke!=0)d.setStroke(dp(1),stroke);return d;}
@@ -52,7 +52,7 @@ public class FloatingService extends Service {
     }
     private void showBubble(){
         if(bubble!=null||!Settings.canDrawOverlays(this))return;
-        ImageView icon=new ImageView(this);icon.setImageResource(com.lixzzy.v1.R.mipmap.ic_launcher);icon.setScaleType(ImageView.ScaleType.CENTER_CROP);icon.setBackground(bg(Color.BLACK,0xffff304d));icon.setPadding(dp(2),dp(2),dp(2),dp(2));
+        ImageView icon=new ImageView(this);icon.setImageResource(com.lixxzy.v2.R.mipmap.ic_launcher);icon.setScaleType(ImageView.ScaleType.CENTER_CROP);icon.setBackground(bg(Color.BLACK,0xffff304d));icon.setPadding(dp(2),dp(2),dp(2),dp(2));
         bubble=icon;bubbleParams=params(dp(58),dp(58),Gravity.TOP|Gravity.LEFT);bubbleParams.gravity=Gravity.TOP|Gravity.LEFT;bubbleParams.x=dp(12);bubbleParams.y=dp(180);
         icon.setOnClickListener(v->{if(expanded)hidePanel();else showPanel();});
         icon.setOnTouchListener(new View.OnTouchListener(){float sx,sy;int ox,oy;boolean moved;
@@ -66,7 +66,7 @@ public class FloatingService extends Service {
         ScrollView scroll=new ScrollView(this);scroll.setFillViewport(false);
         LinearLayout content=new LinearLayout(this);content.setOrientation(1);
         LinearLayout head=new LinearLayout(this);head.setGravity(Gravity.CENTER_VERTICAL);
-        head.addView(txt("Lixzzy V1 • "+gameMode,17,themeAccent(),true),new LinearLayout.LayoutParams(0,-2,1));
+        head.addView(txt("lixxzy v2 • "+gameMode,17,themeAccent(),true),new LinearLayout.LayoutParams(0,-2,1));
         TextView close=txt("✕",20,Color.WHITE,true);head.addView(close);content.addView(head);close.setOnClickListener(v->hidePanel());
         addPanelButton(content,"MODE SENYAP • NOTIFIKASI / TELPON",()->toggleSilentMode());
         addPanelButton(content,"GAME SPACE • PILIH MODE",()->showGameModes());
@@ -115,7 +115,7 @@ public class FloatingService extends Service {
         String[] modes={"RINGAN","SEIMBANG","EKSTREM"};
         String[] details={"Hijau • tema ringan","Biru • tema seimbang","Merah-hitam • tema ekstrem"};
         AlertDialog d=new AlertDialog.Builder(this).setTitle("GAME SPACE • MODE TAMPILAN").setItems(new String[]{details[0],details[1],details[2]},(dialog,which)->{
-            gameMode=modes[which];getSharedPreferences("lixzzy_session",0).edit().putString("gameMode",gameMode).apply();
+            gameMode=modes[which];getSharedPreferences("lixxzy_session",0).edit().putString("gameMode",gameMode).apply();
             hidePanel();showPanel();toast("Tema jendela mengambang: "+gameMode);
         }).setNegativeButton("BATAL",null).create();
         if(Build.VERSION.SDK_INT>=26)d.getWindow();
@@ -135,7 +135,7 @@ public class FloatingService extends Service {
         ActivityManager am=(ActivityManager)getSystemService(ACTIVITY_SERVICE);
         ActivityManager.MemoryInfo mi=new ActivityManager.MemoryInfo();am.getMemoryInfo(mi);
         long total=mi.totalMem/(1024*1024), avail=mi.availMem/(1024*1024), used=total-avail;
-        String msg="RAM total: "+total+" MB\nRAM terpakai sistem/aplikasi: "+used+" MB\nRAM tersedia: "+avail+" MB\n\nAndroid mengelola RAM otomatis. Lixzzy tidak dapat memaksa membersihkan memori Free Fire.";
+        String msg="RAM total: "+total+" MB\nRAM terpakai sistem/aplikasi: "+used+" MB\nRAM tersedia: "+avail+" MB\n\nAndroid mengelola RAM otomatis. lixxzy tidak dapat memaksa membersihkan memori Free Fire.";
         AlertDialog memoryDialog = new AlertDialog.Builder(this).setTitle("PEMBERSIHAN MEMORI").setMessage(msg).setPositiveButton("PENGATURAN APLIKASI",(d,w)->{
             try{Intent x=new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,android.net.Uri.parse("package:"+target));x.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);startActivity(x);}catch(Exception e){openSettings();}
         }).setNegativeButton("TUTUP",null).create();
@@ -184,7 +184,7 @@ public class FloatingService extends Service {
             }
         }
     }
-    private void showNotes(){EditText e=new EditText(this);e.setText(getSharedPreferences("lixzzy_notes",0).getString("note",""));AlertDialog dialog=new AlertDialog.Builder(this).setTitle("Catatan").setView(e).setPositiveButton("SIMPAN",(d,w)->getSharedPreferences("lixzzy_notes",0).edit().putString("note",e.getText().toString()).apply()).setNegativeButton("TUTUP",null).create();if(Build.VERSION.SDK_INT>=26)dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);dialog.show();}
+    private void showNotes(){EditText e=new EditText(this);e.setText(getSharedPreferences("lixxzy_notes",0).getString("note",""));AlertDialog dialog=new AlertDialog.Builder(this).setTitle("Catatan").setView(e).setPositiveButton("SIMPAN",(d,w)->getSharedPreferences("lixxzy_notes",0).edit().putString("note",e.getText().toString()).apply()).setNegativeButton("TUTUP",null).create();if(Build.VERSION.SDK_INT>=26)dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);dialog.show();}
     private List<ResolveInfo> getLaunchableApps(){
         Intent query=new Intent(Intent.ACTION_MAIN);query.addCategory(Intent.CATEGORY_LAUNCHER);
         List<ResolveInfo> apps=getPackageManager().queryIntentActivities(query,0);
@@ -196,14 +196,14 @@ public class FloatingService extends Service {
         for(ResolveInfo r:apps){String p=r.activityInfo.packageName;if(p.equals(getPackageName())||p.equals(target))continue;labels.add(String.valueOf(r.loadLabel(getPackageManager())));packages.add(p);Intent i=new Intent(Intent.ACTION_MAIN);i.addCategory(Intent.CATEGORY_LAUNCHER);i.setClassName(p,r.activityInfo.name);i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);intents.add(i);}
         if(labels.isEmpty()){toast("Tidak ada aplikasi lain ditemukan.");return;}
         AlertDialog picker=new AlertDialog.Builder(this).setTitle(pin?"TAMBAHKAN APK KE PANEL":"OPEN APLIKASI KE-2").setItems(labels.toArray(new String[0]),(d,which)->{
-            if(pin){Set<String> set=new HashSet<>(getSharedPreferences("lixzzy_pins",0).getStringSet("apps",new HashSet<>()));set.add(packages.get(which));getSharedPreferences("lixzzy_pins",0).edit().putStringSet("apps",set).apply();hidePanel();showPanel();toast("Shortcut ditambahkan ke panel.");}
+            if(pin){Set<String> set=new HashSet<>(getSharedPreferences("lixxzy_pins",0).getStringSet("apps",new HashSet<>()));set.add(packages.get(which));getSharedPreferences("lixxzy_pins",0).edit().putStringSet("apps",set).apply();hidePanel();showPanel();toast("Shortcut ditambahkan ke panel.");}
             else try{startActivity(intents.get(which));}catch(Exception ex){toast("Aplikasi tidak bisa dibuka.");}
         }).setNegativeButton("BATAL",null).create();
         if(Build.VERSION.SDK_INT>=26)picker.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
         picker.show();
     }
     private void addPinnedApps(LinearLayout content){
-        Set<String> pins=getSharedPreferences("lixzzy_pins",0).getStringSet("apps",new HashSet<>());
+        Set<String> pins=getSharedPreferences("lixxzy_pins",0).getStringSet("apps",new HashSet<>());
         if(pins.isEmpty())return;
         TextView title=txt("APK / APLIKASI FAVORIT",11,0xffff5268,true);title.setPadding(0,dp(12),0,0);content.addView(title);
         for(String pkg:new HashSet<>(pins)){
@@ -220,7 +220,7 @@ public class FloatingService extends Service {
         if(stopped)return;
         String top=topPackage();
         if(target.equals(top)){sawGame=true;if(bubble==null)showBubble();}
-        else if(sawGame){getSharedPreferences("lixzzy_session",0).edit().putBoolean("sessionEnded",true).apply();stopSelf();return;}
+        else if(sawGame){getSharedPreferences("lixxzy_session",0).edit().putBoolean("sessionEnded",true).apply();stopSelf();return;}
         handler.postDelayed(checker,1200);
     }
     private String topPackage(){
@@ -228,4 +228,4 @@ public class FloatingService extends Service {
     }
     @Override public void onDestroy(){stopped=true;handler.removeCallbacksAndMessages(null);hidePanel();if(bubble!=null){try{wm.removeView(bubble);}catch(Exception e){}bubble=null;}super.onDestroy();}
     @Override public android.os.IBinder onBind(Intent i){return null;}
-}
+    }
